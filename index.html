@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to Rich Text Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        textarea, #output {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #output {
+            border: 1px solid #ccc;
+            overflow-y: auto;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #copyButton {
+            background-color: #008CBA;
+        }
+        #copyButton:hover {
+            background-color: #007B9A;
+        }
+        #copyMessage {
+            display: none;
+            color: green;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Markdown to Rich Text Converter</h1>
+    <textarea id="input" placeholder="Enter your Markdown text here..."></textarea>
+    <button onclick="convertToRichText()">Convert</button>
+    <button id="copyButton" onclick="copyToClipboard()" style="display: none;">Copy Rich Text</button>
+    <span id="copyMessage">Copied to clipboard!</span>
+    <div id="output"></div>
+
+    <script>
+        function convertToRichText() {
+            const input = document.getElementById('input').value;
+            const converter = new showdown.Converter();
+            const richText = converter.makeHtml(input);
+            document.getElementById('output').innerHTML = richText;
+            document.getElementById('copyButton').style.display = 'inline-block';
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('output');
+            const range = document.createRange();
+            range.selectNodeContents(output);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            try {
+                document.execCommand('copy');
+                showCopyMessage();
+            } catch (err) {
+                console.error('Unable to copy', err);
+            }
+            
+            selection.removeAllRanges();
+        }
+
+        function showCopyMessage() {
+            const message = document.getElementById('copyMessage');
+            message.style.display = 'inline';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
